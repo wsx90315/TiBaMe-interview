@@ -10,6 +10,8 @@ const plugins = [
           modifyVars: {
             "primary-color": "#09ADBF",
             "divider-color": "rgba(0, 0, 0, 0.15)",
+            "pagination-item-bg-active": "#09ADBF",
+            "border-radius-base": "4px",
           }
         }
       }
