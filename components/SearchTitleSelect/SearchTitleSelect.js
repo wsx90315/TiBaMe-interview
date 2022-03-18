@@ -1,6 +1,7 @@
 import styled from 'styled-components'
-import { Select } from 'antd';
-import { useState } from 'react';
+import { Select } from 'antd'
+import { useSelector, useDispatch } from 'react-redux'
+import { triggerPriceSelected } from '@/store/actions'
 const { Option } = Select;
 const Card = styled.div`
   position: relative;
@@ -19,8 +20,11 @@ const CardHead = styled.div`
     color: #09ADBF;
   }
 `
-const SearchTitleSelect = () => {
-  const [selected, setSelected] = useState(0)
+const SearchTitleSelect = ({ numberOfCourses }) => {
+  // const [selected, setSelected] = useState(0)
+  const selected = useSelector((state) => state.priceSelected)
+  const dispatch = useDispatch()
+
   const sortByPrice = [
     { value: 0, label: '排序' },
     { value: 1, label: '價格高至低' },
@@ -32,19 +36,19 @@ const SearchTitleSelect = () => {
       <div className="row">
         <div className="col">
           <CardHead>
-            <span className="classes">4</span>
-            <span>&nbsp;門課程</span> 
+            <span className="classes">{numberOfCourses}</span>
+            <span>&nbsp;門課程</span>
           </CardHead>
         </div>
         <div className="col-auto">
-        <Select
-          size="large"
-          defaultValue={selected}
-          style={{ width: 165 }}
-          onChange={(value) => setSelected(value)}
-        >
-          {Options}
-            </Select>
+          <Select
+            size="large"
+            defaultValue={selected}
+            style={{ width: 165 }}
+            onChange={(value) => dispatch(triggerPriceSelected(value))}
+          >
+            {Options}
+          </Select>
         </div>
       </div>
     </Card>

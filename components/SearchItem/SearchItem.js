@@ -1,5 +1,10 @@
-import Image from 'next/image'
 import styled from 'styled-components'
+import courseKeys from '@/utils/courseKeys';
+import dayjs from 'dayjs'
+import duration from 'dayjs/plugin/duration'
+import { useDispatch } from 'react-redux'
+import { addCollection } from '@/store/actions'
+dayjs.extend(duration)
 
 const Card = styled.div`
   display: flex;
@@ -34,20 +39,25 @@ const CardImageLike = styled.i`
   z-index: 2;
   right: 10px;
   top: 10px;
-  color: #0000001A;
+  color: ${props => props.theme.color};
   cursor: pointer;
   transition: all .2 ease-in-out;
   -webkit-text-stroke-width: 0.5px;
-  -webkit-text-stroke-color: #FFFFFFCC;
+  -webkit-text-stroke-color: ${props => props.theme.strokeColor};;
 `
+
 const CardImageBackground = styled.img`
   z-index: 1;
-  width: auto;
+   width: 334px;
   height: 100%;
+  border-radius: 5px 0px 0px 5px;
 `
 const CardContent = styled.div`
   padding: 20px;
   width: 100%;
+  .row {
+    justify-content: space-between;
+  }
   .course-name {
     font: normal normal bold 16px Roboto;
   }
@@ -56,32 +66,46 @@ const CardContent = styled.div`
     color: #09ADBF;
   }
   .course-type {
-    font-family: PingFangTC-Semibold, sans-serif;
-    font: normal normal 600 12px PingFang TC;
-    color: #09ADBF;
+    font: normal normal 600 12px PingFangTC-Semibold, sans-serif;
+    color: ${props => props.color};
   }
   .course-time {
-    font-family: PingFangTC-Regular, sans-serif;
-    font: normal normal normal 12px/18px PingFang TC;
+    font: normal normal normal 12px PingFangTC-Regular, sans-serif;
     color: #0000009A;
   }
 `
-const SearchItem = () => {
+const SearchItem = ({ item }) => {
+  const dispatch = useDispatch()
+  const { index, coverPic, price, courseName, courseType, isEnsure, classStartTime, courseHours, isCollection } = item
+  const { name, color } = courseKeys[courseType]
+  const Time = classStartTime
+    ? `${dayjs(classStartTime).format('YYYY/MM/DD')} 開課`
+    : `約 ${dayjs.duration({ seconds: courseHours }).asHours().toFixed(1)} 小時`
+
+  const CardImageLikeTheme = {
+    color: isCollection ? 'red' : '#0000001A',
+    strokeColor: '#FFFFFFCC'
+  };
+
   return (
     <Card>
       <CardImage>
-        <CardImageLabel>確定開課</CardImageLabel>
-        <CardImageLike className="fa fa-heart"></CardImageLike>
-        <CardImageBackground src="https://cdn-static.tibame.com/course/502/coverPic/cc9731bc-daeb-4261-8cf0-55e9ada6c6cf_Cover-機器學習.png" />
+        {isEnsure ? <CardImageLabel>確定開課</CardImageLabel> : null}
+        <CardImageLike
+          className="fa fa-heart"
+          onClick={() => dispatch(addCollection({ index, updataCollection: isCollection ? 0 : 1 }))}
+          theme={CardImageLikeTheme}
+        ></CardImageLike>
+        <CardImageBackground src={coverPic} />
       </CardImage>
-      <CardContent>
+      <CardContent color={color}>
         <div className="row">
-          <div className="col course-name" style={{ maxWidth: '323px' }}>王作桓❤不寫程式的大數據分析師I：數據分析 之王-超強excel樞紐分析</div>
-          <div className="col-auto course-price">NT$ 250</div>
+          <div className="col course-name" style={{ minWidth: '323px' }}>{courseName}</div>
+          <div className="col-auto course-price">NT$ {price}</div>
         </div>
         <div>
-          <span className="course-type">線上課程</span>
-          <span className="course-time">∙ 約 4.4 小時</span>
+          <span className="course-type">{name}</span>
+          <span className="course-time"> ∙ {Time}</span>
         </div>
       </CardContent>
     </Card>

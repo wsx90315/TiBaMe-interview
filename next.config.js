@@ -8,7 +8,8 @@ const plugins = [
       lessLoaderOptions: {
         lessOptions: {
           modifyVars: {
-            "primary-color": "#09ADBF"
+            "primary-color": "#09ADBF",
+            "divider-color": "rgba(0, 0, 0, 0.15)",
           }
         }
       }
@@ -17,6 +18,15 @@ const plugins = [
 ];
 
 module.exports = withPlugins(plugins, {
+  async redirects () {
+    return [
+      {
+        source: '/',
+        destination: '/search',
+        permanent: true,
+      },
+    ]
+  },
   reactStrictMode: true,
   compiler: {
     styledComponents: true

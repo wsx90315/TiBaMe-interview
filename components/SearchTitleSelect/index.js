@@ -1,1 +1,1 @@
-export { default } from './SearchTitleSelect'; 
+export { default } from './SearchTitleSelect'
