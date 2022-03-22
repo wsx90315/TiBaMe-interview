@@ -58,10 +58,8 @@ const Search = () => {
 
   // 資料過濾或變更排序, 預設分頁回到第一頁 
   useEffect(() => {
-    if (searchData.length) {
-      setCurrent(1)
-      setpageData(chunkPageData(searchData))
-    }
+    setCurrent(1)
+    setpageData(chunkPageData(searchData))
   }, [searchData])
 
   // 統計 預設學院數量, 課程數量
@@ -117,7 +115,7 @@ const Search = () => {
             <SearchTitleSelect numberOfCourses={searchData.length}></SearchTitleSelect>
             {searchRlt && searchRlt.length
               ? <div>
-                {pageData.length ? pageData.map((item, index) => (<SearchItem key={index} item={item}></SearchItem>)) : null}
+                {pageData && pageData.length ? pageData.map((item, index) => (<SearchItem key={index} item={item}></SearchItem>)) : null}
                 <Pagination
                   defaultCurrent={1}
                   current={current}
